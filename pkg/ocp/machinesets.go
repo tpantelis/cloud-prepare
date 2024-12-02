@@ -219,11 +219,11 @@ func (msd *k8sMachineSetDeployer) List() ([]unstructured.Unstructured, error) {
 func RemoveDuplicates(machineSets []unstructured.Unstructured, gwNodes []v1.Node) []v1.Node {
 	var resultNode []v1.Node
 
-	for i := 0; i < len(gwNodes); i++ {
+	for i := range gwNodes {
 		addToResult := true
 
-		for i := 0; i < len(machineSets); i++ {
-			if strings.Contains(gwNodes[i].GetName(), machineSets[i].GetName()) {
+		for j := range machineSets {
+			if strings.Contains(gwNodes[i].GetName(), machineSets[j].GetName()) {
 				addToResult = false
 				break
 			}

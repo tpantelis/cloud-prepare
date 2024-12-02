@@ -214,7 +214,7 @@ func (d *ocpGatewayDeployer) deployGWNode(gatewayCount int,
 func (d *ocpGatewayDeployer) deployDedicatedGWNode(gatewayNodesToDeploy int, useInternalSG bool,
 	status reporter.Interface,
 ) error {
-	for i := 0; i < gatewayNodesToDeploy; i++ {
+	for i := range gatewayNodesToDeploy {
 		gwNodeName := d.InfraID + "-submariner-gw" + strconv.Itoa(i)
 		status.Start("Deploying dedicated Submariner gateway node %s", gwNodeName)
 

@@ -184,7 +184,7 @@ var _ = Describe("K8s MachineSetDeployer", func() {
 				machineSetList, err := deployer.List()
 				Expect(err).To(Succeed())
 
-				Expect(len(machineSetList)).To(Equal(1))
+				Expect(machineSetList).To(HaveLen(1))
 				Expect(machineSetList[0].GetName()).To(Equal(machineSetName))
 			})
 		})
@@ -193,7 +193,7 @@ var _ = Describe("K8s MachineSetDeployer", func() {
 			It("should not return an error", func() {
 				machineSetList, err := deployer.List()
 				Expect(err).To(Succeed())
-				Expect(len(machineSetList)).To(Equal(0))
+				Expect(machineSetList).To(BeEmpty())
 			})
 		})
 	})

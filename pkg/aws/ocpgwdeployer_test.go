@@ -212,7 +212,7 @@ func testCleanup() {
 				delete(t.machineSets, *t.subnets[i].AvailabilityZone)
 			}
 
-			Expect(t.machineSets).To(HaveLen(0), "Unexpected machine sets deleted: %#v", t.machineSets)
+			Expect(t.machineSets).To(BeEmpty(), "Unexpected machine sets deleted: %#v", t.machineSets)
 		})
 	})
 
@@ -369,7 +369,7 @@ func (t *gatewayDeployerTestDriver) testDeploySuccess(msgPrefix, msgSuffix strin
 			delete(t.machineSets, *t.expectedSubnetsDeployed[i].AvailabilityZone)
 		}
 
-		Expect(t.machineSets).To(HaveLen(0), "Unexpected machine sets deployed: %#v", t.machineSets)
+		Expect(t.machineSets).To(BeEmpty(), "Unexpected machine sets deployed: %#v", t.machineSets)
 	})
 }
 

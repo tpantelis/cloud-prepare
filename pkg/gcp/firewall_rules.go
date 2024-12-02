@@ -33,7 +33,7 @@ const (
 	submarinerGatewayNodeTag = "submariner-io-gateway-node"
 )
 
-func newExternalFirewallRules(projectID, infraID string, ports []api.PortSpec) (ingress *compute.Firewall) {
+func newExternalFirewallRules(projectID, infraID string, ports []api.PortSpec) *compute.Firewall {
 	ingressName := generateRuleName(infraID, publicPortsRuleName)
 
 	// We want the external firewall rules to be applied only to Gateway nodes. So, we use the TargetTags
@@ -85,6 +85,6 @@ func newFirewallRule(projectID, infraID, name, direction string, ports []api.Por
 	}
 }
 
-func generateRuleName(infraID, name string) (ingressName string) {
+func generateRuleName(infraID, name string) string {
 	return fmt.Sprintf("%s-%s-ingress", infraID, name)
 }

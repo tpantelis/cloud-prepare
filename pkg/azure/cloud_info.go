@@ -369,7 +369,7 @@ func (c *CloudInfo) getPublicIP(ctx context.Context, publicIPName string, pubIPC
 }
 
 func (c *CloudInfo) createPublicIP(ctx context.Context, ipName string, ipClient *armnetwork.PublicIPAddressesClient,
-) (ip armnetwork.PublicIPAddress, err error) {
+) (armnetwork.PublicIPAddress, error) {
 	ipVersion := armnetwork.IPVersionIPv4
 	ipAllocMethod := armnetwork.IPAllocationMethodStatic
 	skuName := armnetwork.PublicIPAddressSKUNameStandard
@@ -390,18 +390,18 @@ func (c *CloudInfo) createPublicIP(ctx context.Context, ipName string, ipClient 
 			},
 		}, nil)
 	if err != nil {
-		return ip, errors.Wrapf(err, "cannot create public ip address: %q", ipName)
+		return armnetwork.PublicIPAddress{}, errors.Wrapf(err, "cannot create public ip address: %q", ipName)
 	}
 
 	resp, err := poller.PollUntilDone(ctx, nil)
 	if err != nil {
-		return ip, errors.Wrapf(err, "cannot get public ip address create or update response: %q", ipName)
+		return armnetwork.PublicIPAddress{}, errors.Wrapf(err, "cannot get public ip address create or update response: %q", ipName)
 	}
 
 	return resp.PublicIPAddress, nil
 }
 
-func (c *CloudInfo) deletePublicIP(ctx context.Context, ipClient *armnetwork.PublicIPAddressesClient, ipName string) (err error) {
+func (c *CloudInfo) deletePublicIP(ctx context.Context, ipClient *armnetwork.PublicIPAddressesClient, ipName string) error {
 	poller, err := ipClient.BeginDelete(ctx, c.BaseGroupName, ipName, nil)
 	if err != nil {
 		return errors.Wrapf(err, "failed to delete public ip : %q", ipName)

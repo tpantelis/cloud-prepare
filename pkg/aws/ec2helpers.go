@@ -19,7 +19,6 @@ limitations under the License.
 package aws
 
 import (
-	"fmt"
 	"strings"
 
 	"github.com/aws/aws-sdk-go-v2/service/ec2/types"
@@ -41,7 +40,7 @@ func ec2Tag(key, value string) types.Tag {
 }
 
 func ec2FilterByTag(tag types.Tag) types.Filter {
-	return ec2Filter(fmt.Sprintf("tag:%s", *tag.Key), *tag.Value)
+	return ec2Filter("tag:"+*tag.Key, *tag.Value)
 }
 
 func hasTag(tags []types.Tag, desired types.Tag) bool {

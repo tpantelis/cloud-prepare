@@ -52,12 +52,12 @@ func newInternalFirewallRule(projectID, infraID string, ports []api.PortSpec) *c
 
 	rule := newFirewallRule(projectID, infraID, ingressName, ingressDirection, ports)
 	rule.TargetTags = []string{
-		fmt.Sprintf("%s-worker", infraID),
-		fmt.Sprintf("%s-master", infraID),
+		infraID + "-worker",
+		infraID + "-master",
 	}
 	rule.SourceTags = []string{
-		fmt.Sprintf("%s-worker", infraID),
-		fmt.Sprintf("%s-master", infraID),
+		infraID + "-worker",
+		infraID + "-master",
 	}
 
 	return rule

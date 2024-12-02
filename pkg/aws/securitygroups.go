@@ -20,7 +20,6 @@ package aws
 
 import (
 	"context"
-	"fmt"
 	"strings"
 	"time"
 
@@ -145,19 +144,19 @@ func (ac *awsCloud) allowPortInCluster(vpcID string, port uint16, protocol strin
 		}
 	}
 
-	err = ac.createClusterSGRule(workerGroupID, workerGroupID, port, protocol, fmt.Sprintf("%s between the workers", internalTraffic))
+	err = ac.createClusterSGRule(workerGroupID, workerGroupID, port, protocol, internalTraffic+" between the workers")
 	if err != nil {
 		return err
 	}
 
 	err = ac.createClusterSGRule(workerGroupID, controlPlaneGroupID, port, protocol,
-		fmt.Sprintf("%s from worker to control plane nodes", internalTraffic))
+		internalTraffic+" from worker to control plane nodes")
 	if err != nil {
 		return err
 	}
 
 	return ac.createClusterSGRule(controlPlaneGroupID, workerGroupID, port, protocol,
-		fmt.Sprintf("%s from control plane to worker nodes", internalTraffic))
+		internalTraffic+" from control plane to worker nodes")
 }
 
 func (ac *awsCloud) createPublicSGRule(groupID *string, port uint16, protocol, description string) error {

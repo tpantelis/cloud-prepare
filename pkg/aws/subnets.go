@@ -80,14 +80,14 @@ func (ac *awsCloud) findSubnetsByFilter(ctx context.Context, vpcID string, filte
 }
 
 func (ac *awsCloud) findPublicSubnets(ctx context.Context, vpcID string, filter types.Filter) ([]types.Subnet, error) {
-	if len(ac.publicSubnetList) == 0 {
+	if len(ac.PublicSubnetList) == 0 {
 		publicSubnets, err := ac.findSubnetsByFilter(ctx, vpcID, filter)
 		return publicSubnets, errors.Wrap(err, "unable to find public subnets")
 	}
 
 	var publicSubnets []types.Subnet
 
-	for _, id := range ac.publicSubnetList {
+	for _, id := range ac.PublicSubnetList {
 		subnet, err := ac.getSubnetByID(ctx, id)
 		if err != nil {
 			return nil, errors.Wrapf(err, "unable to find subnet with ID %q", id)

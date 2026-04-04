@@ -36,42 +36,46 @@ const (
 	messageValidatePrerequisites = "Validating pre-requisites"
 )
 
-type CloudOption func(*awsCloud)
+type CloudOptions struct {
+	ControlPlaneSecurityGroup string
+	WorkerSecurityGroup       string
+	VPCName                   string
+	PublicSubnetList          []string
+}
+
+type CloudOption func(*CloudOptions)
 
 func WithControlPlaneSecurityGroup(id string) CloudOption {
-	return func(cloud *awsCloud) {
-		cloud.controlPlaneGroupID = id
+	return func(opts *CloudOptions) {
+		opts.ControlPlaneSecurityGroup = id
 	}
 }
 
 func WithWorkerSecurityGroup(id string) CloudOption {
-	return func(cloud *awsCloud) {
-		cloud.workerGroupID = id
+	return func(opts *CloudOptions) {
+		opts.WorkerSecurityGroup = id
 	}
 }
 
 func WithPublicSubnetList(s []string) CloudOption {
-	return func(cloud *awsCloud) {
-		cloud.publicSubnetList = s
+	return func(opts *CloudOptions) {
+		opts.PublicSubnetList = s
 	}
 }
 
 func WithVPCName(name string) CloudOption {
-	return func(cloud *awsCloud) {
-		cloud.vpcID = name
+	return func(opts *CloudOptions) {
+		opts.VPCName = name
 	}
 }
 
 type awsCloud struct {
+	CloudOptions
 	client               awsClient.Interface
 	infraID              string
 	region               string
 	nodeSGSuffix         string
 	controlPlaneSGSuffix string
-	controlPlaneGroupID  string
-	workerGroupID        string
-	publicSubnetList     []string
-	vpcID                string
 }
 
 // NewCloud creates a new api.Cloud instance which can prepare AWS for Submariner to be deployed on it.
@@ -83,18 +87,18 @@ func NewCloud(client awsClient.Interface, infraID, region string, opts ...CloudO
 	}
 
 	for _, opt := range opts {
-		opt(cloud)
+		opt(&cloud.CloudOptions)
 	}
 
 	return cloud
 }
 
 func (ac *awsCloud) setSuffixes(ctx context.Context, vpcID string) error {
-	if ac.nodeSGSuffix != "" || (ac.workerGroupID != "" && ac.controlPlaneGroupID != "") {
+	if ac.nodeSGSuffix != "" || (ac.WorkerSecurityGroup != "" && ac.ControlPlaneSecurityGroup != "") {
 		return nil
 	}
 
-	if ac.vpcID != "" {
+	if ac.VPCName != "" {
 		return errors.New("when a custom VPC is specified, both worker and control plane security groups must also be specified")
 	}
 

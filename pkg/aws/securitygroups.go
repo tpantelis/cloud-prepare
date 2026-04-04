@@ -44,8 +44,8 @@ func (ac *awsCloud) getSecurityGroupID(ctx context.Context, vpcID, name string) 
 }
 
 func (ac *awsCloud) getWorkerSecurityGroupID(ctx context.Context, vpcID string) (*string, error) {
-	if ac.workerGroupID != "" {
-		return &ac.workerGroupID, nil
+	if ac.WorkerSecurityGroup != "" {
+		return &ac.WorkerSecurityGroup, nil
 	}
 
 	groupID, err := ac.getSecurityGroupID(ctx, vpcID, withInfraIDPrefix(ac.nodeSGSuffix))
@@ -128,8 +128,8 @@ func (ac *awsCloud) allowPortInCluster(ctx context.Context, vpcID string, port u
 
 	var controlPlaneGroupID *string
 
-	if ac.controlPlaneGroupID != "" {
-		controlPlaneGroupID = &ac.controlPlaneGroupID
+	if ac.ControlPlaneSecurityGroup != "" {
+		controlPlaneGroupID = &ac.ControlPlaneSecurityGroup
 	} else {
 		controlPlaneGroupName := withInfraIDPrefix(ac.controlPlaneSGSuffix)
 
@@ -257,8 +257,8 @@ func (ac *awsCloud) revokePortsInCluster(ctx context.Context, vpcID string) erro
 	var workerGroup, controlPlaneGroup types.SecurityGroup
 	var err error
 
-	if ac.workerGroupID != "" {
-		workerGroup, err = ac.getSecurityGroupByID(ctx, ac.workerGroupID)
+	if ac.WorkerSecurityGroup != "" {
+		workerGroup, err = ac.getSecurityGroupByID(ctx, ac.WorkerSecurityGroup)
 	} else {
 		workerGroup, err = ac.getSecurityGroup(ctx, vpcID, withInfraIDPrefix(ac.nodeSGSuffix))
 	}
@@ -267,8 +267,8 @@ func (ac *awsCloud) revokePortsInCluster(ctx context.Context, vpcID string) erro
 		return errors.Wrap(err, "unable to get Worker Security Group")
 	}
 
-	if ac.controlPlaneGroupID != "" {
-		controlPlaneGroup, err = ac.getSecurityGroupByID(ctx, ac.controlPlaneGroupID)
+	if ac.ControlPlaneSecurityGroup != "" {
+		controlPlaneGroup, err = ac.getSecurityGroupByID(ctx, ac.ControlPlaneSecurityGroup)
 	} else {
 		controlPlaneGroup, err = ac.getSecurityGroup(ctx, vpcID, withInfraIDPrefix(ac.controlPlaneSGSuffix))
 	}

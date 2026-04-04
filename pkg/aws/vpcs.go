@@ -30,8 +30,8 @@ func (ac *awsCloud) getVpcID(ctx context.Context) (string, error) {
 	var err error
 	var result *ec2.DescribeVpcsOutput
 
-	if ac.vpcID != "" {
-		return ac.vpcID, nil
+	if ac.VPCName != "" {
+		return ac.VPCName, nil
 	}
 
 	ownedFilters := ac.filterByCurrentCluster()
